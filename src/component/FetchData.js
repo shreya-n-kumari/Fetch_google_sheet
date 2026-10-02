@@ -9,7 +9,7 @@ const FetchData = () => {
 
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+//   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const getEmployees = async () => {
   try {
@@ -38,6 +38,8 @@ const FetchData = () => {
   }
 };
 
+{loading && <p>Loading...</p>}
+
   useEffect(() => {
     getEmployees();
   }, []);
@@ -56,7 +58,7 @@ const FetchData = () => {
     }
 
     try {
-      setIsSubmitting(true);
+    //   setIsSubmitting(true);
 
       const response = await fetch(`${API_URL}?action=addEmployee`, {
         method: "POST",
@@ -86,7 +88,7 @@ const FetchData = () => {
       console.error("Error inserting employee:", error);
       alert(error.message || "Something went wrong.");
     } finally {
-      setIsSubmitting(false);
+    //   setIsSubmitting(false);
     }
 }
 
