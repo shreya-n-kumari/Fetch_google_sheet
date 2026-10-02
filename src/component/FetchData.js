@@ -35,10 +35,10 @@ const FetchData = () => {
     setEmployees([]);
   } finally {
     setLoading(false);
+    {loading && <p>Loading...</p>}
   }
 };
 
-{loading && <p>Loading...</p>}
 
   useEffect(() => {
     getEmployees();
