@@ -35,7 +35,6 @@ const FetchData = () => {
     setEmployees([]);
   } finally {
     setLoading(false);
-    {loading && <p>Loading...</p>}
   }
 };
 
@@ -117,6 +116,12 @@ const FetchData = () => {
         <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
           Employee List
         </h2>
+
+        {loading && (
+              <p className="text-center text-blue-600 mb-4">
+                Loading...
+              </p>
+            )}
 
         {/* Scrollable Table Container */}
         <div className="max-h-80 border rounded-lg">
