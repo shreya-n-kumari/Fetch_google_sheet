@@ -1,94 +1,30 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 
-const API_URL = "https://script.google.com/macros/s/AKfycbw-Q_nJltIsP9cyCfcFGhU1qwHf-ReEXixcP_WG0dC49tC3C3KUcQYTMf6kif4uSC93pw/exec";
-
-
-
 const FetchData = () => {
 
-  const [employees, setEmployees] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+    // get data functions
+      const [employees, setEmployees] = useState([]);
+    
+      useEffect(() => {
+        fetch("https://script.google.com/macros/s/AKfycbwV8Ql1loOs5wB592EyPz02MD83lCOAtRUMZ3veOOOHcFMCdwLqmcMQFEDz_Nq43Qg/exec") 
+          .then((response) => response.json())
+          .then((data) => setEmployees(data))
+          .catch((error) => console.log("Error fetching data:", error));
+      }, []);
 
-  const getEmployees = async () => {
-  try {
-    setLoading(true);
-
-    const response = await fetch(`${API_URL}?action=getEmployees`);
-
-    if (!response.ok) {
-      throw new Error("Unable to fetch employee data.");
-    }
-
-    const result = await response.json();
-
-    console.log("Google Sheet GET response:", result);
-
-    if (!result.success) {
-      throw new Error(result.message || "Unable to fetch employee data.");
-    }
-
-    setEmployees(Array.isArray(result.data) ? result.data : []);
-  } catch (error) {
-    console.error("Error fetching employees:", error);
-    setEmployees([]);
-  } finally {
-    setLoading(false);
-  }
-};
-
-  useEffect(() => {
-    getEmployees();
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const form = e.currentTarget;
-
-    const empId = form.emp_id.value.trim();
-    const name = form.name.value.trim();
-
-    if (!empId || !name) {
-      alert("Please enter both Employee ID and Name.");
-      return;
-    }
-
-    try {
-      setIsSubmitting(true);
-
-      const response = await fetch(`${API_URL}?action=addEmployee`, {
-        method: "POST",
-        redirect: "follow",
-        headers: {
-            "Content-Type": "text/plain;charset=utf-8",
-        },
-        body: JSON.stringify({
-            Emp_ID: empId,
-            Name: name,
-        }),
-        });
-      const result = await response.text();
-
-      if (!response.ok) {
-        throw new Error(result || "Employee could not be added.");
+    //   post data function
+      const handleSubmit = (e)=>{
+        e.preventDefault()
+        const url = "https://script.google.com/macros/s/AKfycbwRlWJvFOFvmjkkOsUSH6OIzwFHhFE0_rEqz-_L9CPwYEtiASZP6JQTyhNXvnzDXTvc/exec"
+        fetch(url,{
+          method:"POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body:(`Emp_ID=${e.target.emp_id.value}&Name=${e.target.name.value}`)
+        }).then(res=>res.text()).then(data=>{
+          alert(data)
+        }).catch(error=>console.log(error))
       }
-
-      alert(result);
-
-      form.reset();
-
-      // Fetch the updated Google Sheet data and re-render the table
-      await getEmployees();
-
-    } catch (error) {
-      console.error("Error inserting employee:", error);
-      alert(error.message || "Something went wrong.");
-    } finally {
-      setIsSubmitting(false);
-    }
-}
 
   return (
     <section className="container mx-auto p-6 mt-6">
